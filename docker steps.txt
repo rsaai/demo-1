@@ -1,0 +1,483 @@
+FROM ubuntu:latest # base Image from docker hub
+RUN apt-get update -y #
+RUN apt-get install default-jre -y
+RUN mkdir /opt/tomcat
+WORKDIR /opt/tomcat
+ADD https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.69/bin/apache-tomcat-9.0.69.tar.gz .
+RUN tar -xvzf apache-tomcat-9.0.69.tar.gz
+RUN mv apache-tomcat-9.0.69/* /opt/tomcat
+EXPOSE 8080
+CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+
+
+
+
+FROM ubuntu:latest
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt update && apt install -y tcl
+WORKDIR /usr/src/myapp
+COPY . /usr/src/myapp
+#COPY atm-dev.conf /etc/nginx/sites-available/
+COPY .env  /usr/src/myapp
+COPY php.ini /etc/php/8.1/fpm/
+RUN  apt-get install --no-install-recommends php8.1 -y
+RUN  apt-get install php8.1-mysql php8.1-curl php8.1-cgi php8.1-xsl php8.1-gd php8.1-zip php8.1-fpm php8.1-common php8.1-mbstring php8.1-xmlrpc -y
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+RUN composer update
+RUN apt-get install nginx -y
+COPY atm-dev.conf /etc/nginx/sites-available
+RUN service nginx start
+RUN ln -s /etc/nginx/sites-available/atm-dev.conf /etc/nginx/sites-enabled/
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+
+
+
+----------------------- Docker Commands---------------------
+
+
+
+ 1  sudo su
+    2  sudo apt update
+    3  sudo apt install apt-transport-https ca-certificates curl software-properties-common
+    4  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    5  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+    6  apt-cache policy docker-ce
+    7  sudo apt install docker-ce
+    8  sudo systemctl status docker
+    9  docker
+   10  docker info
+   11  docker run hello-world
+   12  docker search ubuntu
+   13  sudo usermod -aG docker ${USER}
+   14  su - ${USER}
+   15  groups
+   16  sudo usermod -aG docker username
+   17  sudo su
+   18  vi dockerfile
+   19  ll
+   20  docker build -t mytomcat .
+   21  vi dockerfile
+   22  docker build -t mytomcat .
+   23  vi dockerfile
+   24  docker build -t mytomcat .
+   25  vi dockerfile
+   26  docker build -t mytomcat .
+   27  vi dockerfile
+   28  docker build -t mytomcat .
+   29  vi dockerfile
+   30  docker build -t mytomcat .
+   31  vi dockerfile
+   32  ls
+   33  mv dockerfile Dockerfile
+   34  ls
+   35  docker build -t mytomcat .
+   36  vi dockerfile
+   37  ls
+   38  rm dockerfile
+   39  vi Dockerfile
+   40  docker build -t mytomcat .
+   41  vi Dockerfile
+   42  docker ps
+   43  docker ps -a
+   44  docker images
+   45  docker -d --name demo-container -p 8080:8080 mytomcat
+   46  docker ps -a
+   47  docker run -it -d --name mytomcat -p 80:80 033298cdf5ae
+   48  docker run -it -d --name mytomcat -p 80:81 033298cdf5ae
+   49  docker images
+   50  docker run -it -d --name mytomcat -p 80:80 033298cdf5ae
+   51  vi Dockerfile
+   52  docker rmi bc728184cf97
+   53  docker ps -a
+   54  docker run -it -d --name mytomcat -p 80:80 033298cdf5ae
+   55  docker tag OldName:mytomcat NewName:tomcat-1
+   56  docker run -it -d --name mytomcat -p 80:80 033298cdf5ae
+   57  docker ps
+   58  docker ps -a
+   59  docker rm 20a9081ddf29
+   60  docker ps -a
+   61  docker run -it -d --name mytomcat -p 8080:8080 033298cdf5ae
+   62  docker ps -a
+   63  vi Dockerfile
+   64  sudo apt purge nginx
+   65  docker ps
+   66  docker ps -a
+   67  sudo apt purge nginx
+   68  $ sudo apt remove nginx nginx-commons
+   69  $ sudo apt purge nginx nginx-commons
+   70  $  purge nginx nginx-commons
+   71  clear
+   72  docker ps
+   73  docker stop d764473ec277
+   74  docker rm d764473ec277
+   75  docker ps
+   76  docker ps -a
+   77  clear
+   78  docker ps
+   79  mkdir demo-proj
+   80  ls
+   81  cd demo-proj/
+   82  ls
+   83  git clone -b stage_itm https://github.com/Appstekcorp-com/ATM-Upgrade.git
+   84  ls
+   85  cd ATM-Upgrade/
+   86  ls
+   87  cd ..
+   88  vi Dockerfile
+   89  docker build -t myphp .
+   90  vi Dockerfile
+   91  docker build -t myphp .
+   92  vi Dockerfile
+   93  docker build -t myphp .
+   94  vi Dockerfile
+   95  docker build -t myphp .
+   96  vi Dockerfile
+   97  docker pull php:8.1-fpm
+   98  docker ps
+   99  docker images
+  100  docker run -it -d --name php-cont f8976ec64ba6
+  101  docker ps
+  102  docker exec -it 93a33cb35043 /bin/bash
+  103  docker stop 93a33cb35043
+  104  docker rm 93a33cb35043
+  105  docker imageges
+  106  docker images
+  107  docker ps
+  108  docker rmi f8976ec64ba6
+  109  docker rmi 7b866d32d596
+  110  docker rmi df63b3d3af8c eae84dc152e3 6f9673d40376
+  111  docker ps-a
+  112  docker ps -a
+  113  docker rm 9474570e508d 15bad840b77a
+  114  docker images
+  115  docker rmi df63b3d3af8c 6f9673d40376
+  116  vi Dockerfile
+  117  docker build -t myphp .
+  118  vi Dockerfile
+  119  docker build -t myphp .
+  120  vi Dockerfile
+  121  docker build -t myphp .
+  122  docker images
+  123  docker rmi 5b3fcf991bd3 0b5e25058fbc 40bf3f79aab5
+  124  docker rm 17cce961a0b1 6042b5e2232a
+  125  docker rmi 5b3fcf991bd3 0b5e25058fbc 40bf3f79aab5
+  126  docker images
+  127  docker rmi f8976ec64ba6
+  128  docker images
+  129  docker ps
+  130  docker ps -a
+  131  docker rmi 88736fe82739
+  132  vi Dockerfile
+  133  docker build -t myphp .
+  134  vi Dockerfile
+  135  docker build -t myphp .
+  136  vi Dockerfile
+  137  docker build -t myphp .
+  138  docker images
+  139  docker ps -a
+  140  docker rm 9c6d1cc89a18 6fbc0e185108
+  141  docker rmi ef9861b56701 b41ce24cde1d
+  142  docker images
+  143  docker ps -a
+  144  php --version
+  145  docker exec -it d3dccfe7a2f6 /bin/bash
+  146  docker exec container-name cat /etc/os-release
+  147  docker exec -it d3dccfe7a2f6 /bin/bash
+  148  docker exec php-cont cat /etc/os-release
+  149  docker exec -it d3dccfe7a2f6 /bin/bash
+  150  vi Dockerfile
+  151  docker build -t myngnix .
+  152  vi Dockerfile
+  153  docker build -t myngnix .
+  154  vi Dockerfile
+  155  docker build -t myngnix
+  156  docker build -t myngnix .
+  157  vi Dockerfile
+  158  docker build -t myngnix .
+  159  docker images
+  160  docker -it -d nginx-cont 12f285dd3381
+  161  docker ps -a
+  162  docker images
+  163  docker -it -d nginx-cont
+  164  vi Dockerfile
+  165  docker build -t myngnix .
+  166  vi Dockerfile
+  167  docker build -t myngnix .
+  168  docker images
+  169  docker ps -a
+  170  docker rmi 63d5dbdeb4aa ef226abf2571 74dcf6c64d71 256499021890 aba3d93f0587
+  171  docker images
+  172  docker run -it -d --name nginx-cont 12f285dd3381
+  173  docker ps -a
+  174  docker exec -it c670d94f1c8c /bin/bash
+  175  cat Dockerfile
+  176  vi Dockerfile
+  177  docker build -t myngnix .
+  178  docker images
+  179  docker rmi 12f285dd3381
+  180  docker ps -a
+  181  docker run -it -d --name nginx -p 8080 e8926bde4009
+  182  docker ps -a
+  183  docker exec -it 084173c093e1 /bin/bash
+  184  docker images
+  185  docker ps -a
+  186  docker exec -it 084173c093e1 /bin/bash
+  187  sl
+  188  ls
+  189  vi Dockerfile
+  190  cd demo-proj/
+  191  ls
+  192  vi Dockerfile
+  193  docker exec -it 084173c093e1 /bin/bash
+  194  vi Dockerfile
+  195  docker stop 084173c093e1 c670d94f1c8c
+  196  docker rmi e8926bde4009 12f285dd3381
+  197  docker rm 084173c093e1 c670d94f1c8c
+  198  docker rmi e8926bde4009 12f285dd3381
+  199  docker imageges
+  200  docker images
+  201  docker ps -a
+  202  vi Dockerfile
+  203  docker build -t myngnix .
+  204  docker images
+  205  docker run -it -d --name nginx -p 80:80 ffce315a751b
+  206  docker ps -a
+  207  docker exec -it 6206ea42675e /bin/bash
+  208  vi Dockerfile
+  209  docker stop 6206ea42675e
+  210  docker rm 6206ea42675
+  211  docker rmi ffce315a751b
+  212  vi Dockerfile
+  213  docker build -t myngnix .
+  214  docker run -it -d --name nginx-cont -p 80:80 c70234bbc1ab
+  215  docker ps -a
+  216  docker
+  217  docker stop e305560ecfba
+  218  docker rm e305560ecfba
+  219  docker rmi c70234bbc1ab
+  220  vi Dockerfile
+  221  docker build -t myngnix:v1 .
+  222  docker images
+  223  docker run -it -d --name nginx-cont -p 80:80 myngnix:v1
+  224  docker ps
+  225  docker exec -it 52e2dd189380 /bin/bash
+  226  vi Dockerfile
+  227  docker build -t myngnix:v1:v2 .
+  228  docker build -t myngnix:v2 .
+  229  vi Dockerfile
+  230  docker build -t myngnix:v2 .
+  231  vi Dockerfile
+  232  docker build -t myngnix:v2 .
+  233  ls
+  234  cd demo-proj/
+  235  ls
+  236  vi Dockerfile
+  237  docker build -t myngnix:v2 .
+  238  ls
+  239  cd demo-proj/
+  240  ls
+  241  cd ATM-Upgrade/
+  242  ls
+  243  ls -lart
+  244  vi atm-dev.conf
+  245  vi php.ini
+  246  vi .env
+  247  vi atm-dev.conf
+  248  vi .env
+  249  vi php.ini
+  250  vi atm-dev.conf
+  251  ls
+  252  vi Dockerfile
+  253  vi atm-dev.conf
+  254  vi .env
+  255  docker ps
+  256  cat Dockerfile
+  257  docker exec -it 52e2dd189380 /bin/bash
+  258  ls
+  259  vi atm-dev.conf
+  260  sudo vi atm-dev.conf
+  261  sudo vi .env
+  262  docker exec -it 52e2dd189380 /bin/bash
+  263  ps -a
+  264  docker ps -a
+  265  docker exec -it 6a164980f696 /bin/bash
+  266  vi Dockerfile
+  267  history `
+  268  vi Dockerfile
+  269  vi Dockerfile
+  270  vi Dockerfile
+  271  docker build -t comp-cont /home/ubuntu/demo-proj/ATM-Upgrade
+  272  ls
+  273  vi Dockerfile
+  274  docker exec -it 6a164980f696 /bin/bash
+  275  docker build -t comp-cont-1 /home/ubuntu/demo-proj/ATM-Upgrade
+  276  docker images
+  277  docker run -it -d --name -p 80:80 86c63664895f
+  278  docker run -it -d --name -p 80 86c63664895f
+  279  docker run -it -d --name comp 86c63664895f
+  280  docker run -it -d --name comp -p 80:80  86c63664895f
+  281  docker ps -a
+  282  docker exec -it 7fddf810b70c /bin/bash
+  283  vi Dockerfile
+  284  docker build -t comp-cont-2 /home/ubuntu/demo-proj/ATM-Upgrade
+  285  vi Dockerfile
+  286  docker build -t comp-cont-2 /usr/src/myapp
+  287  vi Dockerfile
+  288  docker build -t comp-cont-3 /home/ubuntu/demo-proj/ATM-Update
+  289  pwd
+  290  vi Dockerfile
+  291  docker build -t comp-cont-3 /home/ubuntu/demo-proj/ATM-Update
+  292  docker build -t comp-cont-3 .
+  293  vi Dockerfile
+  294  docker build -t comp-cont-3 /home/ubuntu/demo-proj/ATM-Upgrade/
+  295  cat Dockerfile
+  296  vi Dockerfile
+  297  docker images
+  298  docker ps -a
+  299  docker exec -it 1b56fe11cab9 /bin/bash
+  300  docker exec -it 6a164980f696 /bin/bash
+  301  vi Dockerfile
+  302  docker build -t comp-cont-1 /home/ubuntu/demo-proj/ATM-Update
+  303  docker build -t comp-cont-1 .
+  304  vi Dockerfile
+  305  docker exec -it 6a164980f696 /bin/bash
+  306  vi Dockerfile
+  307  docker build -t comp-cont-1 ./
+  308  docker build -t comp-cont-1 /usr/src/myapp
+  309  vi Dockerfile
+  310  docker build -t comp-cont-1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  311  docker images
+  312  docker ps -a
+  313  docker stop e2c270f4f668 06cb2b201bce 1f3b77c80e8a
+  314  docker rm e2c270f4f668 06cb2b201bce 1f3b77c80e8a
+  315  docker rmi aa7853752c99 0167ae68e4ba
+  316  docker build -t comp-cont-1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  317  docker build -t comp-cont-1 /home/ubuntu/demo-proj/ATM-Upgrade/a/
+  318  vi Dockerfile
+  319  docker build -t comp-cont-1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  320  vi Dockerfile
+  321  docker build -t comp-cont-1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  322  vi Dockerfile
+  323  docker build -t comp-cont-1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  324  vi Dockerfile
+  325  docker build -t comp-cont-1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  326  docker images
+  327  docker rmi fd52fa4f096c 231bc3c54ab6 f03dcc24c10e 85fbf544ed2a
+  328  docker rm f9c6ae690a81 2859ff29fb32 caad67701a25
+  329  docker rmi f9c6ae690a81 2859ff29fb32 caad67701a25
+  330  vi Dockerfile
+  331  docker build -t comp-cont-1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  332  docker ps -a
+  333  docker stop ae469820c660 b3913424a1e8 b110a9f47a74 9d031653fb6b 43054d7e27f3 96cff06680ca 540f9123f00e 3fc78d55e8a6 e20de71cde1e 83f0dff290df cb70e8ec047c e8a74f5e94eb d3dccfe7a2f6
+  334  docker rm ae469820c660 b3913424a1e8 b110a9f47a74 9d031653fb6b 43054d7e27f3 96cff06680ca 540f9123f00e 3fc78d55e8a6 e20de71cde1e 83f0dff290df cb70e8ec047c e8a74f5e94eb d3dccfe7a2f6
+  335  docker rmi 71603a7d705c 033298cdf5ae a8780b506fa4 a8780b506fa4 a8780b506fa4 5d0da3dc9764 5d0da3dc9764 maven httpd hello-world ubuntu hello-world hello-world
+  336  docker images
+  337  docker rmi fd52fa4f096c 231bc3c54ab6
+  338  docker rm 7fccfb371b41
+  339  docker rmi fd52fa4f096c
+  340  docker ps -a
+  341  docker images
+  342  docker rmi bc728184cf97 bc728184cf97 7b866d32d596 85fbf544ed2a
+  343  docker images
+  344  docker build -t comp-cont-1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  345  docker run -it -d --name copy-files 8529b45d112c
+  346  docker ps
+  347  docker exec -it 44323d52ea6e /bin/bash
+  348  vi Dockerfile
+  349  docker ps
+  350  docker exec -it 44323d52ea6e /bin/bash
+  351  vi Dockerfile
+  352  docker exec -it 44323d52ea6e /bin/bash
+  353  vi Dockerfile
+  354  docker build -t comp-image-1:v1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  355  docker run -it -d --name copy-files-1 0b6ae6fe00f6
+  356  docker ps
+  357  doicker exec -it 56d9e16167d9 /bin/bash
+  358  docker exec -it 56d9e16167d9 /bin/bash
+  359  docker ps
+  360  docker stop 56d9e16167d9
+  361  docker rm 56d9e16167d9
+  362  docker images
+  363  docker rmi 0b6ae6fe00f6
+  364  docker images
+  365  vi Dockerfile
+  366  docker build -t comp-image-1:v1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  367  vi Dockerfile
+  368  docker build -t comp-image-1:v2 /home/ubuntu/demo-proj/ATM-Upgrade/
+  369  docker run -it -d --name
+  370  docker images
+  371  docker rmi 1160fb65f543 dd0c1ef6cd64 86c63664895f
+  372  docker rm 1af33913554e f08557ea2519
+  373  docker ps
+  374  docker stop 44323d52ea6e
+  375  docker rm 44323d52ea6e
+  376  docker rmi 1160fb65f543
+  377  docker images
+  378  docker rmi dd0c1ef6cd64
+  379  docker rmi 86c63664895f
+  380  docker build -t comp-image-1:v1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  381  docker run -it -d --name copy-files-2 4e17640d8ff2
+  382  docker ps
+  383  docker ps -a
+  384  docker run -it --name copy-files-2 4e17640d8ff2
+  385  docker rm 3fae095f16f2
+  386  docker run -it --name copy-files-2 4e17640d8ff2
+  387  cat atm-dev.conf
+  388  vi atm-dev.conf
+  389  rm atm-dev.conf
+  390  vi atm-dev.conf
+  391  docker ps -a
+  392  docker rm 11f8712ff1bc
+  393  docker rmi 4e17640d8ff2
+  394  docker build -t comp-image-1:v1 /home/ubuntu/demo-proj/ATM-Upgrade/
+  395  docker run -it-d --name copy-files-2 4e17640d8ff2
+  396  docker run -it -d --name copy-files-3 9b2826c9195c
+  397  docker ps
+  398  docker exec -it ab5ffb16f58f /bin/bash
+
+
+
+-------------Steps to Create Docker----------------
+
+1). We want to create a Aws Ec2(elastic compute cloud) instance 
+
+2). Open the putty . And copy the IP address of Aws , which we create in aws . And add ssh key 
+
+3). Login as Ubuntu
+
+4). Vi Dockerfile # to create a Dockerfile
+
+5). In the Dockerfile we use 
+    FROM, RUN, WORKDIR, ADD , COPY 
+
+6).Create a image (docker images)
+
+7).To create a container from image (docker run -it -d <image name>)
+
+8).After creating a container the command to see the list of container ( docker ps -> to list the running containers)
+
+9).To list the all existing and running (docker ps -a -> to list the existing and running cointainers)
+
+10). 
+
+
+
+
+
+
+
+
+
+
+--------------------php Dockerfile----------------------------
+FROM ubuntu:latest
+FROM php:latest
+COPY . /usr/src/myapp
+WORKDIR /usr/src/myapp
+CMD [ "php", "./your-script.php" ]
+RUN  apt-get install --no-install-recommends php8.1 -y
+RUN  apt-get install php8.1-mysql php8.1-curl php8.1-cgi php8.1-xsl php8.1-gd php8.1-zip php8.1-fpm php8.1-common php8.1-mbstring php8.1-xmlrpc -y
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+RUN composer update
